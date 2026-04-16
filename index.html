@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UFN Email Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f4f4; min-height: 100vh; padding: 30px 16px; }
+    .container { max-width: 680px; margin: 0 auto; }
+    .header { background: #003366; border-radius: 8px 8px 0 0; padding: 24px 32px; text-align: center; }
+    .header-logo { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+    .header-logo span { color: #f0a500; }
+    .header-accent { width: 60px; height: 2px; background: #f0a500; margin: 10px auto 0; border-radius: 2px; }
+    .title-bar { background: #f0a500; text-align: center; padding: 12px 20px; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 24px; }
+    .card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; padding: 20px 24px; margin-bottom: 16px; }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #888; margin-bottom: 14px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .field-row.single { grid-template-columns: 1fr; }
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 12px; color: #555; font-weight: 600; }
+    input { width: 100%; padding: 9px 12px; font-size: 14px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #333; transition: border-color 0.2s; }
+    input:focus { outline: none; border-color: #003366; box-shadow: 0 0 0 3px rgba(0,51,102,0.08); }
+    input::placeholder { color: #bbb; }
+    .gen-btn { background: #003366; color: #fff; border: none; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 4px; transition: background 0.2s; }
+    .gen-btn:hover { background: #002244; }
+    .copy-btn { background: #f0a500; color: #fff; border: none; padding: 11px 22px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .copy-btn:hover { background: #d4940a; }
+    .reset-btn { background: #fff; color: #003366; border: 1px solid #003366; padding: 11px 22px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .reset-btn:hover { background: #f0f4ff; }
+    #output-area { margin-top: 24px; display: none; }
+    .output-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .copied-msg { font-size: 13px; color: #1D9E75; font-weight: 600; display: none; }
+    #email-preview { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: #fff; }
+    #email-preview iframe { width: 100%; border: none; min-height: 500px; display: block; }
+    .footer-note { text-align: center; font-size: 12px; color: #aaa; margin-top: 20px; padding-bottom: 10px; }
+    @media (max-width: 480px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-logo">OnePath <span>Financial</span></div>
+    <div class="header-accent"></div>
+  </div>
+  <div class="title-bar">Post-Pitch Email Generator</div>
+
+  <div class="card">
+    <p class="section-title">Client Info</p>
+    <div class="field-row">
+      <div class="field-group">
+        <label>First Name</label>
+        <input id="f-first" type="text" placeholder="e.g. John">
+      </div>
+      <div class="field-group">
+        <label>Last Name</label>
+        <input id="f-last" type="text" placeholder="e.g. Smith">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">Program Numbers</p>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Total Debt Being Consolidated</label>
+        <input id="f-debt" type="text" placeholder="e.g. 45,000">
+      </div>
+      <div class="field-group">
+        <label>New Offer Total Cost</label>
+        <input id="f-cost" type="text" placeholder="e.g. 28,000">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>New Monthly Payment</label>
+        <input id="f-monthly" type="text" placeholder="e.g. 650">
+      </div>
+      <div class="field-group">
+        <label>Monthly Payment Savings</label>
+        <input id="f-savings" type="text" placeholder="e.g. 420">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Total Savings Over Program</label>
+        <input id="f-total-savings" type="text" placeholder="e.g. 17,000">
+      </div>
+      <div class="field-group">
+        <label>Term Length</label>
+        <input id="f-term" type="text" placeholder="e.g. 48 Months (4 Years)">
+      </div>
+    </div>
+  </div>
+
+  <button class="gen-btn" onclick="generateEmail()">Generate Email</button>
+
+  <div id="output-area">
+    <div class="output-toolbar">
+      <button class="copy-btn" onclick="copyHTML()">Copy HTML</button>
+      <button class="reset-btn" onclick="resetForm()">Start Over</button>
+      <span class="copied-msg" id="copied-msg">Copied to clipboard!</span>
+    </div>
+    <div id="email-preview">
+      <iframe id="preview-frame" src="about:blank"></iframe>
+    </div>
+  </div>
+
+  <p class="footer-note">UFN | United Financial Network &mdash; Internal Tool</p>
+
+</div>
+
+<script>
+function fmt(val) {
+  if (!val || !val.trim()) return '&mdash;';
+  var v = val.trim();
+  return v.startsWith('$') ? v : '$' + v;
+}
+
+function generateEmail() {
+  var first = document.getElementById('f-first').value.trim() || '{First Name}';
+  var debt = fmt(document.getElementById('f-debt').value);
+  var cost = fmt(document.getElementById('f-cost').value);
+  var monthly = fmt(document.getElementById('f-monthly').value);
+  var savings = fmt(document.getElementById('f-savings').value);
+  var totalSavings = fmt(document.getElementById('f-total-savings').value);
+  var term = document.getElementById('f-term').value.trim() || '&mdash;';
+
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Your Debt Relief Summary</title></head><body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,sans-serif;">'
+  + '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;"><tr><td align="center" style="padding:30px 10px;">'
+  + '<table width="620" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);">'
+  + '<tr><td style="background-color:#ffffff;padding:32px 32px 20px;text-align:center;border-bottom:1px solid #eeeeee;">'
+  + '<a href="https://onepathfinancial.com/" style="text-decoration:none;"><img src="https://onepathfinancial.com/images/logo.png" alt="One Path Financial" style="display:block;margin:0 auto;max-width:200px;width:100%;height:auto;border:0;"></a>'
+  + '<div style="width:60px;height:2px;background:#f0a500;margin:12px auto 0;border-radius:2px;"></div></td></tr>'
+  + '<tr><td style="background-color:#f0a500;text-align:center;padding:14px 20px;"><span style="color:#ffffff;font-size:15px;font-weight:bold;letter-spacing:0.5px;">Your Personalized Debt Relief Summary</span></td></tr>'
+  + '<tr><td style="padding:36px 40px;color:#333333;font-size:15px;line-height:1.8;">'
+  + '<p style="margin:0 0 14px 0;">Hello ' + first + ',</p>'
+  + '<p style="margin:0 0 14px 0;">Thank you for your time today. After reviewing your information, we were able to approve you for terms that will save you significantly &mdash; both in the short and long term.</p>'
+  + '<p style="margin:0 0 24px 0;">Below is a summary of your approved options and the accounts we can help you with. Please look everything over and don&rsquo;t hesitate to reach out with any questions.</p>'
+  + '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;background:#f0f6ff;border-radius:6px;border:1px solid #d0e0f0;"><tr><td style="padding:16px 20px;">'
+  + '<p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#003366;text-transform:uppercase;letter-spacing:0.5px;">Your Approved Terms</p>'
+  + '<table cellpadding="0" cellspacing="0" width="100%">'
+  + '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">Total Debt Being Consolidated</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + debt + '</td></tr>'
+  + '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">New Offer Total Cost</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + cost + '</td></tr>'
+  + '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">New Monthly Payment</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + monthly + '</td></tr>'
+  + '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">Monthly Payment Savings</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + savings + '</td></tr>'
+  + '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">Total Savings Over Program</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#f0a500;text-align:right;border-bottom:1px solid #e0eaf5;">' + totalSavings + '</td></tr>'
+  + '<tr><td style="padding:6px 0;font-size:14px;color:#555;">Term Length</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;">' + term + '</td></tr>'
+  + '</table></td></tr></table>'
+  + '<p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#003366;">Accounts We Can Help You With:</p>'
+  + '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;"><tr><td style="padding:14px;background:#fafafa;border:1px dashed #cccccc;border-radius:6px;text-align:center;font-size:13px;color:#888;">[ Attach debt summary screenshot here ]</td></tr></table>'
+  + '<p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#003366;text-transform:uppercase;letter-spacing:0.5px;">What You Get By Enrolling:</p>'
+  + '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;">'
+  + '<tr><td style="padding:9px 14px;border-left:3px solid #f0a500;background:#fafafa;font-size:14px;">Immediate monthly payment relief</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;border-left:3px solid #f0a500;background:#fafafa;font-size:14px;">Be free of enrolled debt in 2 to 4 years</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;border-left:3px solid #f0a500;background:#fafafa;font-size:14px;">Reduce each individual debt by over 25%</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;border-left:3px solid #f0a500;background:#fafafa;font-size:14px;">You do not have to enroll all of your accounts</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;border-left:3px solid #f0a500;background:#fafafa;font-size:14px;">Not a matter of public record</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;border-left:3px solid #f0a500;background:#fafafa;font-size:14px;">No prepayment penalties</td></tr>'
+  + '</table>'
+  + '<p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#003366;text-transform:uppercase;letter-spacing:0.5px;">How the Program Works (4 Steps):</p>'
+  + '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;">'
+  + '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 1 &mdash;</strong> We open an FDIC-insured trust account in your name, solely under your control. You have full transparency of where every dollar goes.</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 2 &mdash;</strong> You stop paying creditors directly and make one lower monthly payment into your new trust account.</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 3 &mdash;</strong> As your funds build, our skilled negotiators strategically reach out to your creditors and begin the restructuring process.</td></tr><tr><td height="7"></td></tr>'
+  + '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 4 &mdash;</strong> Once a favorable agreement is reached, you approve it. Funds are transferred to that creditor and the account is resolved.</td></tr>'
+  + '</table>'
+  + '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;"><tr><td style="padding:14px 16px;background:#fff8ec;border-left:3px solid #f0a500;font-size:14px;color:#555;"><strong style="color:#003366;">A note on credit:</strong> While enrolled, you may experience a temporary dip in your credit score. However, once accounts are resolved, removing high utilization and reliance on revolving debt typically helps offset the impact. Enrolled credit cards will be closed, though you choose which accounts to include.</td></tr></table>'
+  + '<p style="margin:0 0 20px 0;">Please review everything and let me know how you&rsquo;d like to proceed. I&rsquo;m happy to answer any questions.</p>'
+  + '<table cellpadding="0" cellspacing="0" style="margin:0 0 14px 0;"><tr><td bgcolor="#003366" style="border-radius:6px;"><a href="tel:16465172605" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;">Call Now: (646) 517-2605</a></td></tr></table>'
+  + '<table cellpadding="0" cellspacing="0" style="margin:0 0 24px 0;"><tr><td bgcolor="#f0a500" style="border-radius:6px;"><a href="https://outlook.office.com/book/OnePathFinancialSchedulingAdamIferganConsultation@unitedfn.com/" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;">Schedule a Follow-Up Call</a></td></tr></table>'
+  + '<p style="margin:0 0 24px;font-size:14px;">You can also check out what our clients are saying: <a href="https://onepathfinancial.com/reviews" style="color:#003366;font-weight:700;">Read Our Reviews</a></p>'
+  + '<hr style="border:none;border-top:1px solid #eeeeee;margin:20px 0;">'
+  + '<p style="margin:0;font-size:14px;color:#555555;line-height:1.8;"><strong style="font-size:16px;color:#003366;">Adam Ifergan</strong><br><span style="color:#f0a500;font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:0.5px;">Senior Financial Consultant</span><br><strong style="color:#003366;font-size:13px;">UFN | United Financial Network</strong><br>&#128222; (646) 517-2605<br>&#9993; aifergan@unitedfn.com</p>'
+  + '</td></tr>'
+  + '<tr><td style="background-color:#003366;text-align:center;padding:18px 32px;font-size:12px;color:#aac4e0;"><p style="margin:4px 0;">&copy; 2026 UFN | United Financial Network. All rights reserved.</p><p style="margin:4px 0;"><a href="mailto:aifergan@unitedfn.com" style="color:#f0a500;text-decoration:none;">aifergan@unitedfn.com</a></p><p style="margin-top:10px;font-size:11px;color:#7a9fc0;">This email is confidential and intended only for the recipient.</p></td></tr>'
+  + '</table></td></tr></table></body></html>';
+
+  window._generatedHTML = html;
+
+  var outputArea = document.getElementById('output-area');
+  outputArea.style.display = 'block';
+
+  var iframe = document.getElementById('preview-frame');
+  var doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open(); doc.write(html); doc.close();
+  setTimeout(function() {
+    iframe.style.height = (doc.body.scrollHeight + 20) + 'px';
+  }, 300);
+
+  outputArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copyHTML() {
+  if (!window._generatedHTML) return;
+  navigator.clipboard.writeText(window._generatedHTML).then(function() {
+    var msg = document.getElementById('copied-msg');
+    msg.style.display = 'inline';
+    setTimeout(function() { msg.style.display = 'none'; }, 2500);
+  });
+}
+
+function resetForm() {
+  ['f-first','f-last','f-debt','f-cost','f-monthly','f-savings','f-total-savings','f-term'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('output-area').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
