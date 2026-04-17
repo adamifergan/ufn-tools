@@ -75,8 +75,8 @@
     <p class="section-title">Debt Summary Screenshot</p>
     <label for="file-input">
       <div class="upload-area" id="upload-area">
-        <p id="upload-text">Click to upload or drag screenshot here</p>
-        <small>PNG or JPG &mdash; will be embedded directly into the email</small>
+        <p id="upload-text">Click to upload, drag, or paste (Ctrl+V) screenshot</p>
+        <small>Snip with Snipping Tool, then Ctrl+V anywhere on this page</small>
         <img id="image-preview" class="image-preview" style="display:none;">
       </div>
     </label>
@@ -152,6 +152,27 @@ uploadArea.addEventListener('drop', function(e) {
   if (e.dataTransfer.files.length) {
     fileInput.files = e.dataTransfer.files;
     fileInput.dispatchEvent(new Event('change'));
+  }
+});
+
+document.addEventListener('paste', function(e) {
+  var items = (e.clipboardData || window.clipboardData).items;
+  if (!items) return;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf('image') !== -1) {
+      var blob = items[i].getAsFile();
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        _imageDataURL = ev.target.result;
+        imagePreview.src = _imageDataURL;
+        imagePreview.style.display = 'block';
+        uploadText.textContent = '\u2713 Screenshot pasted \u2014 click box to change';
+        uploadArea.classList.add('has-image');
+      };
+      reader.readAsDataURL(blob);
+      e.preventDefault();
+      break;
+    }
   }
 });
 
@@ -270,7 +291,7 @@ function resetForm() {
   _imageDataURL = '';
   fileInput.value = '';
   imagePreview.style.display = 'none';
-  uploadText.textContent = 'Click to upload or drag screenshot here';
+  uploadText.textContent = 'Click to upload, drag, or paste (Ctrl+V) screenshot';
   uploadArea.classList.remove('has-image');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
