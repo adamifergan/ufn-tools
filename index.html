@@ -199,16 +199,16 @@ function generateEmail() {
     : '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;"><tr><td style="padding:50px 20px;background:#fff8ec;border:2px dashed #f0a500;text-align:center;font-size:14px;color:#b07800;font-weight:700;">[ No screenshot uploaded ]</td></tr></table>';
 
   _generatedHTML =
-'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Your Debt Relief Summary</title></head>' +
+'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Your Debt Relief Summary</title></head>' +
 '<body style="margin:0;padding:0;background-color:#ffffff;font-family:Arial,sans-serif;">' +
 '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#ffffff;"><tr><td align="center" style="padding:0;">' +
-'<table width="620" cellpadding="0" cellspacing="0" style="background-color:#ffffff;">' +
-'<tr><td style="background-color:#ffffff;padding:32px 32px 20px;text-align:center;border-bottom:1px solid #eeeeee;">' +
+'<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#ffffff;max-width:620px;">' +
+'<tr><td style="background-color:#ffffff;padding:24px 20px 16px;text-align:center;border-bottom:1px solid #eeeeee;">' +
 '<a href="https://onepathfinancial.com/" style="text-decoration:none;"><img src="https://onepathfinancial.com/images/logo.png" alt="One Path Financial" style="display:block;margin:0 auto;max-width:200px;width:100%;height:auto;border:0;"></a>' +
 '<div style="width:60px;height:2px;background:#f0a500;margin:12px auto 0;"></div></td></tr>' +
-'<tr><td style="background-color:#f0a500;text-align:center;padding:14px 20px;">' +
-'<span style="color:#ffffff;font-size:15px;font-weight:bold;letter-spacing:0.5px;">Your Personalized Debt Relief Summary</span></td></tr>' +
-'<tr><td style="padding:36px 40px;color:#333333;font-size:15px;line-height:1.8;">' +
+'<tr><td style="background-color:#f0a500;text-align:center;padding:14px 16px;">' +
+'<span style="color:#ffffff;font-size:16px;font-weight:bold;letter-spacing:0.5px;">Your Personalized Debt Relief Summary</span></td></tr>' +
+'<tr><td style="padding:28px 20px;color:#333333;font-size:16px;line-height:1.7;">' +
 '<p style="margin:0 0 14px;">Hello ' + first + ',</p>' +
 '<p style="margin:0 0 14px;">Thank you for your time today. After reviewing your information, we were able to approve you for terms that will save you significantly &mdash; both in the short and long term.</p>' +
 '<p style="margin:0 0 24px;">Below is a summary of your approved options and the accounts we can help you with. Please look everything over and don&rsquo;t hesitate to reach out with any questions.</p>' +
@@ -218,7 +218,7 @@ function generateEmail() {
 '<table cellpadding="0" cellspacing="0" width="100%">' +
 '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">Total Debt Being Consolidated</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + debt + '</td></tr>' +
 '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">New Offer Total Cost</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + cost + '</td></tr>' +
-'<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">New Monthly Payment</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + monthly + '</td></tr>' +
+'<tr><td style="padding:8px 0;font-size:16px;font-weight:700;color:#003366;border-bottom:1px solid #e0eaf5;">New Monthly Payment</td><td style="padding:8px 0;font-size:16px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + monthly + '</td></tr>' +
 '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">Monthly Payment Savings</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;border-bottom:1px solid #e0eaf5;">' + savings + '</td></tr>' +
 '<tr><td style="padding:6px 0;font-size:14px;color:#555;border-bottom:1px solid #e0eaf5;">Total Savings Over Program</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#f0a500;text-align:right;border-bottom:1px solid #e0eaf5;">' + totalSav + '</td></tr>' +
 '<tr><td style="padding:6px 0;font-size:14px;color:#555;">Term Length</td><td style="padding:6px 0;font-size:14px;font-weight:700;color:#003366;text-align:right;">' + term + '</td></tr>' +
@@ -238,7 +238,7 @@ screenshotBlock +
 '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;">' +
 '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 1 &mdash;</strong> We open an FDIC-insured trust account in your name, solely under your control. You have full transparency of where every dollar goes.</td></tr><tr><td height="7"></td></tr>' +
 '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 2 &mdash;</strong> You stop paying creditors directly and make one lower monthly payment into your new trust account.</td></tr><tr><td height="7"></td></tr>' +
-'<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 3 &mdash;</strong> As your funds build, our skilled negotiators strategically reach out to your creditors and begin the restructuring process.</td></tr><tr><td height="7"></td></tr>' +
+'<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 3 &mdash;</strong> Our skilled negotiators reach out to your creditors and begin the restructuring process, once your 1st payment clears.</td></tr><tr><td height="7"></td></tr>' +
 '<tr><td style="padding:9px 14px;background:#fafafa;border-left:3px solid #003366;font-size:14px;"><strong style="color:#003366;">Step 4 &mdash;</strong> Once a favorable agreement is reached, you approve it. Funds are transferred to that creditor and the account is resolved.</td></tr>' +
 '</table>' +
 '<table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:24px;"><tr><td style="padding:14px 16px;background:#fff8ec;border-left:3px solid #f0a500;font-size:14px;color:#555;"><strong style="color:#003366;">A note on credit:</strong> While enrolled, you may experience a temporary dip in your credit score. However, once accounts are resolved, removing high utilization and reliance on revolving debt typically helps offset the impact. Enrolled credit cards will be closed, though you choose which accounts to include.</td></tr></table>' +
